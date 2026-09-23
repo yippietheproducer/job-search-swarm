@@ -1,5 +1,7 @@
 # job-search-swarm
 
+[![tests](https://github.com/yippietheproducer/job-search-swarm/actions/workflows/tests.yml/badge.svg)](https://github.com/yippietheproducer/job-search-swarm/actions/workflows/tests.yml)
+
 A human-in-the-loop job-search engine for the Polish / EU remote market —
 deterministic crawlers, an evidence-graded store, and two swarm scripts that
 find roles **before the aggregators do**.
