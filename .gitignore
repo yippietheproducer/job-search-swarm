@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+*.db
+*.sqlite
+.env
+profile.yaml
+crawl_raw.json
+crawl_results.json
+funding_swarm*.json
+hn_all.json
+offers/
+.DS_Store

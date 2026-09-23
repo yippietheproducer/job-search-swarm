@@ -1,0 +1,18 @@
+# Candidate profile template — copy to profile.yaml and fill in your own data.
+# The tailor NEVER invents facts: it generates only from what this file states.
+# profile.yaml is gitignored; do not commit real personal data.
+candidate:
+  name: "Your Name"
+  title: "Junior / Mid Full-Stack Developer"
+  location: "Your City"
+  remote_ok: true
+  email: "you@example.com"
+  phone: ""
+  background_note: |
+    Honest one-paragraph summary of your real background. State your actual
+    level (junior/mid/senior) — the scorer reports gaps instead of hiding them.
+  skills: ["python", "typescript", "react"]
+  experience: []
+  preferences:
+    hours_per_week: 20
+    contract: ["b2b", "uz"]
