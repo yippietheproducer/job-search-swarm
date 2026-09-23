@@ -232,6 +232,9 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=128)
     ap.add_argument("--per-host", type=int, default=4)
     ap.add_argument("--out", default="funding_swarm.json")
+    ap.add_argument("--extra-names", default=None,
+                    help="path to a newline-delimited file of extra company names "
+                         "(e.g. a curated VC portfolio) to resolve alongside the feeds")
     args = ap.parse_args()
 
     print(f"=== FUNDING SWARM — {args.workers} workers, {args.per_host} per host ===")
@@ -250,8 +253,8 @@ def main() -> int:
         companies.setdefault(s, "seed list")
     # scale the WORK to match the worker count: a curated VC portfolio is a list of
     # funded companies, and 128 workers with only 55 companies is over-provisioned
-    extra = pathlib.Path("/tmp/extra_names.txt")
-    if extra.exists():
+    extra = pathlib.Path(args.extra_names) if args.extra_names else None
+    if extra and extra.exists():
         for line in extra.read_text().splitlines():
             n = line.strip()
             if 2 < len(n) < 34:

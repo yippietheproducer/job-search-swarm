@@ -346,3 +346,20 @@ def test_shortlist_breaks_ties_on_pay_then_stack_fit():
     b = J.normalize(_offer(title="Developer"))  # same rate, fewer matching skills
     out = J.shortlist([b, a])
     assert out[0]["title"] == "Cloud Engineer"
+
+
+# ── regression: a facet failing on its FIRST page must not crash the sweep ──
+def test_first_page_failure_is_reported_not_raised():
+    """Found in review: `data` was bound only inside the try, so a get() that
+    raised on page 0 left the summary expression below evaluating an unbound
+    local -> UnboundLocalError. That is the exact failure the module promises
+    to keep visible ('a facet that failed has to stay visible as a failure'),
+    surfacing as a crash instead of a report."""
+
+    def boom(url):
+        raise ConnectionError("host down")
+
+    r = J.sweep(facets=(J.PART_TIME,), get=boom, sleep=0)
+    pf = r["per_facet"][J.PART_TIME]
+    assert pf["ok"] is False and "ConnectionError" in pf["error"]
+    assert r["failed_facets"] == [J.PART_TIME]

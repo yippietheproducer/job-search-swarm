@@ -268,6 +268,8 @@ def sweep(*, facets: tuple[str, ...] = CONTRACT_FACETS, base: str = JUSTJOIN,
         seen_slugs: set[str] = set()
         paged = 0
         facet_error: str | None = None
+        data: dict = {}  # bound even when the FIRST page fails, so the summary
+        # below can never NameError on exactly the failure it exists to report
         for page in range(max_pages):
             url = listing_url(facet, from_=page * PAGE_SIZE, base=base)
             try:

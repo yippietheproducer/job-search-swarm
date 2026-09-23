@@ -31,7 +31,7 @@ twice returned identical sets. The exclusion is structural, not an artifact.
 **Lesson:** on any board, enumerate the *whole enum* of a facet before
 trusting a filtered count. The category you're not querying is invisible.
 
-## 2. Silent no-op filters — the bug class, eight confirmed instances
+## 2. Silent no-op filters — the bug class, ten instances across six sources
 
 A filter that returns HTTP 200 with unfiltered data looks exactly like
 success. Confirmed instances (each verified by sending two different filter
@@ -45,6 +45,10 @@ values and diffing the result sets):
 | justjoin.it | `perPage` | ignored — always exactly 10 rows; only `from=N` advances, and `meta.totalItems` is the authoritative count |
 | jobs.workable.com `/api/v1/jobs` | query params | returns **HTTP 200** with a payload that ignores the query — the data is behind a different endpoint |
 | tech.eu feed | `?paged=N` | 200 but pages 1/2/3 are byte-identical, 100% overlap |
+
+Counting by filter, not by row: remotive 3 (`search`, `category`, `limit`) +
+arc.dev 3 + jobgether 1 + justjoin `perPage` 1 + workable 1 + tech.eu 1 =
+**10 silently-ignored filters across 6 sources**.
 
 **Rule adopted:** "the filter returned results" is unproven until two
 different filter values return different result sets. There is a regression

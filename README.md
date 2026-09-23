@@ -22,7 +22,7 @@ claim in `FINDINGS.md` is backed by a captured HTTP response, not a vibe.
 | `swarm/hn_swarm.py` | Sweeps **12 months** of HN "Who is hiring" threads via the Algolia API (~5,000 founder-posted ads, machine-readable, no auth) and filters for remote / part-time / AI-stack. |
 | `swarm/crawl_sources.py` | Deterministic crawler — no LLM in the loop. 13 source families, ~450 requests at 64 workers, ~4 min wall clock (Greenhouse, Ashby, Lever, Workable, Personio, Recruitee, justjoin, feeds…). Dumps raw rows so filters can be iterated **offline**. |
 | `pracuj_ai/` | The application copilot: fetch → dedupe store (SQLite) → scam-farm filter → remote-truth audit → evidence-graded fit scoring → tailored CV/cover-letter drafts. **A human sends; the machine prepares.** |
-| `tests/` | 205 test functions (238 cases + 24 subtests). Includes regression tests for every silent failure found in production data. |
+| `tests/` | 207 test functions (240 cases + 24 subtests). Includes regression tests for every silent failure found in production data. |
 
 ## The concurrency rule that matters
 
@@ -47,7 +47,7 @@ that).
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e . pytest pyyaml
-python3 -m pytest tests/ -q          # 238 passed, 1 skipped (private-data guard)
+python3 -m pytest tests/ -q          # 240 passed, 1 skipped (private-data guard)
 
 # sweep 12 months of HN "Who is hiring" for remote part-time AI roles:
 python3 swarm/hn_swarm.py --out hn_all.json

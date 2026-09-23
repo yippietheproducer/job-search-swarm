@@ -1,8 +1,13 @@
-"""Minimal OpenAI-compatible client for the cline-fleet gateway.
+"""Minimal OpenAI-compatible chat client — pure stdlib, no dependencies.
 
-Reuses the live lane documented in AGENTS.md: cline-fleet proxy at :8443,
-model cline-pass/kimi-k3 (free via the managed pool). No third-party deps —
-pure stdlib, so this package installs cleanly anywhere Python >= 3.11 runs.
+Works against any OpenAI-compatible `/v1/chat/completions` endpoint: a local
+model proxy, a free gateway, or a paid API. Configure via environment:
+
+    PRACUJ_GATEWAY   base URL (with or without the /v1 suffix)
+    PRACUJ_MODEL     model name
+    PRACUJ_API_KEY   optional bearer key
+
+No third-party deps, so this package installs cleanly anywhere Python >= 3.11.
 """
 from __future__ import annotations
 

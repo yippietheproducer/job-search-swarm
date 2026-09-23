@@ -5,6 +5,7 @@ this. Offers are keyed by pracuj.pl offer ID (the digits in `,oferta,<ID>`).
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sqlite3
@@ -43,7 +44,13 @@ _OFFER_ID_RE = re.compile(r",oferta,(\d+)")
 
 def offer_id(url: str) -> str:
     m = _OFFER_ID_RE.search(url)
-    return m.group(1) if m else "x" + str(abs(hash(url)))
+    if m:
+        return m.group(1)
+    # NOT builtin hash(): it is salted per process (PYTHONHASHSEED), so the same
+    # URL would mint a different id in every run and dedup/new-detection would
+    # silently break across monitor cycles. md5 is stable. (boards.py already
+    # did this correctly; this brings the store in line.)
+    return "x" + hashlib.md5(url.encode("utf-8")).hexdigest()[:16]
 
 
 @dataclass

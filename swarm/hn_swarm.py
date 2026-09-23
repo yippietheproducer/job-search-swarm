@@ -17,7 +17,8 @@ WHAT IT FILTERS FOR, AND WHY
     part-time / contract ...... his actual constraint (<40 h/week)
     AI / LLM / agent .......... his domain, and where portfolio-tolerance is highest
     Python / TS / React ....... his shipped stack
-    senior marker in line 1 ... reported, not excluded - the level gate is real but visible
+    senior marker in line 1 ... kept on every row; excluded only from the ranked
+    shortlist - the level gate is real but visible
 
 Output: JSON + a ranked markdown shortlist. Every post keeps its permalink so any row can be checked
 by hand in one click.
@@ -93,7 +94,10 @@ def main() -> int:
     args = ap.parse_args()
 
     th = threads()
-    ordered = sorted(th.items(), key=lambda kv: kv[0], reverse=True)[:args.max_threads]
+    # search_by_date returns newest first and dict preserves insertion order, so
+    # this slice is the most RECENT N monthly threads. (Sorting by title instead
+    # would be ALPHABETICAL over month names, not chronological.)
+    ordered = list(th.items())[:args.max_threads]
     print(f"=== HN 'Who is hiring' sweep — {len(ordered)} monthly threads ===")
 
     rows: list[dict] = []

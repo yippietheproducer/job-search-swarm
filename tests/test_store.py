@@ -1,7 +1,10 @@
 """Unit tests for the SQLite offer store (funded flag, dedup, filters)."""
 import os
+import pathlib
 import tempfile
 import unittest
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 from pracuj_ai.store import OfferRecord, Store, offer_id
 
@@ -24,7 +27,9 @@ class StoreTest(unittest.TestCase):
 
     def test_offer_id_from_url(self):
         self.assertEqual(offer_id("https://www.pracuj.pl/praca/x,oferta,12345?s=a"), "12345")
-        self.assertEqual(offer_id("no id here"), "x" + str(abs(hash("no id here"))))
+        import hashlib
+        self.assertEqual(offer_id("no id here"),
+                         "x" + hashlib.md5(b"no id here").hexdigest()[:16])
 
     def test_upsert_new_and_dedup(self):
         self.assertTrue(self.store.upsert(self._rec("1", funded=True, fit=80)))
@@ -65,3 +70,22 @@ class StoreTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_offer_id_fallback_is_stable_across_processes(tmp_path):
+    """The non-pracuj fallback used builtin hash(), which is salted per process
+    (PYTHONHASHSEED): the same URL minted a different id in every run, so the
+    dedup/new-detection the store exists for silently broke across monitor
+    cycles. Pin the stable derivation."""
+    import hashlib
+    import subprocess
+    import sys as _sys
+
+    url = "https://example.com/job/123"  # no ',oferta,<id>' -> fallback path
+    expected = "x" + hashlib.md5(url.encode("utf-8")).hexdigest()[:16]
+    assert offer_id(url) == expected
+    out = subprocess.check_output(
+        [_sys.executable, "-c",
+         "import sys; sys.path.insert(0, %r); from pracuj_ai.store import offer_id;"
+         " print(offer_id(%r))" % (str(ROOT), url)], text=True).strip()
+    assert out == expected, "offer_id must not depend on per-process hash salt"

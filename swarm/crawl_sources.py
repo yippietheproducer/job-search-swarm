@@ -33,7 +33,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
+ROOT = pathlib.Path(__file__).resolve().parents[1]  # repo root (swarm/ is one level down)
 OUT = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
